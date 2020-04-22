@@ -5,7 +5,9 @@ exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
   const blogPost = path.resolve(`./src/templates/blog-post.js`)
-  const result = await graphql(
+  const blogPostMdx = path.resolve(`./src/templates/blog-post-mdx.js`)
+
+  const resultMd = await graphql(
     `
       {
         allMarkdownRemark(
@@ -27,20 +29,62 @@ exports.createPages = async ({ graphql, actions }) => {
     `
   )
 
-  if (result.errors) {
-    throw result.errors
+  if (resultMd.errors) {
+    throw resultMd.errors
+  }
+
+  const resultMdx = await graphql(
+    `
+      {
+        allMdx(
+          sort: { fields: [frontmatter___date], order: DESC }
+          limit: 1000
+        ) {
+          edges {
+            node {
+              fields {
+                slug
+              }
+              frontmatter {
+                title
+              }
+            }
+          }
+        }
+      }
+    `
+  )
+
+  if (resultMdx.errors) {
+    throw resultMdx.errors
   }
 
   // Create blog posts pages.
-  const posts = result.data.allMarkdownRemark.edges
+  const postsMd = resultMd.data.allMarkdownRemark.edges
+  const postsMdx = resultMdx.data.allMdx.edges
 
-  posts.forEach((post, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node
-    const next = index === 0 ? null : posts[index - 1].node
+  postsMd.forEach((post, index) => {
+    const previous = index === postsMd.length - 1 ? null : postsMd[index + 1].node
+    const next = index === 0 ? null : postsMd[index - 1].node
 
     createPage({
       path: post.node.fields.slug,
       component: blogPost,
+      context: {
+        slug: post.node.fields.slug,
+        previous,
+        next,
+      },
+    })
+  })
+
+  postsMdx.forEach((post, index) => {
+    const previous = index === postsMdx.length - 1 ? null : postsMdx[index + 1].node
+    const next = index === 0 ? null : postsMdx[index - 1].node
+
+    createPage({
+      path: post.node.fields.slug,
+      component: blogPostMdx,
       context: {
         slug: post.node.fields.slug,
         previous,
@@ -54,6 +98,15 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
   if (node.internal.type === `MarkdownRemark`) {
+    const value = createFilePath({ node, getNode })
+    createNodeField({
+      name: `slug`,
+      node,
+      value,
+    })
+  }
+
+  if (node.internal.type === `Mdx`) {
     const value = createFilePath({ node, getNode })
     createNodeField({
       name: `slug`,

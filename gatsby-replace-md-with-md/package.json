@@ -8,11 +8,14 @@
     "url": "https://github.com/gatsbyjs/gatsby/issues"
   },
   "dependencies": {
+    "@mdx-js/mdx": "^1.5.8",
+    "@mdx-js/react": "^1.5.8",
     "gatsby": "^2.20.25",
     "gatsby-image": "^2.3.4",
     "gatsby-plugin-feed": "^2.4.3",
     "gatsby-plugin-google-analytics": "^2.2.4",
     "gatsby-plugin-manifest": "^2.3.5",
+    "gatsby-plugin-mdx": "^1.1.10",
     "gatsby-plugin-offline": "^3.1.4",
     "gatsby-plugin-react-helmet": "^3.2.4",
     "gatsby-plugin-sharp": "^2.5.6",

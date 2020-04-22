@@ -1,0 +1,11 @@
+repository:
+  name: jungle
+  description: Wild and untamed scripts
+
+  has_wiki: false
+
+  default_branch: master
+
+  allow_merge_commit: false
+  allow_squash_merge: false
+  allow_rebase_merge: true

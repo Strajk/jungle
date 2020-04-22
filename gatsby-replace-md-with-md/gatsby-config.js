@@ -30,6 +30,7 @@ module.exports = {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
+          require.resolve("./plugins/remark-mutate"),
           {
             resolve: `gatsby-remark-images`,
             options: {

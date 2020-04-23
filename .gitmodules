@@ -1,0 +1,3 @@
+[submodule "silvenon-js-boilerplate"]
+	path = silvenon-js-boilerplate
+	url = https://github.com/silvenon/js-project
